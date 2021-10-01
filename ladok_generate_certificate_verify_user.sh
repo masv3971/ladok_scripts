@@ -65,7 +65,7 @@ if [[ "${certificate_file}" =~ (p12$|pfx$) ]]; then
     fi
 
     if ! get_server_cert "${certificate_file}" "${password_input}"; then
-        printf "\tERROR can not convert bunle to server cert, exiting...\n"
+        printf "\tERROR can not convert bundle to server cert, exiting...\n"
         exit 1
     fi
     printf "\tclient-cert, server-cert and key has been successfully created.\n"
