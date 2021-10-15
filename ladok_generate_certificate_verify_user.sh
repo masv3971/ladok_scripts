@@ -76,10 +76,10 @@ if ! choose_ladok_environment "${certificate_name}" "${password_input}"; then
     if openssl x509 -in "${certificate_name}".crt -passin pass:"${password_input}" -subject -noout | grep Prod-UFH; then
         printf "\t%s\n" "Uppföljningsdatabasen cert, no REST available, use STUNNEL." \
         "Please check https://confluence.its.umu.se/confluence/display/TP/Uppkoppling+mot+UppfoljningsDB+Windows+1 for details." \
-        "Requires your SWAMID account to be manually added to that confluence through your local ladok representative." ""
+        "Requires your SWAMID account to be manually added to that confluence through your local ladok representative."
     fi
     exit 1
-else 
+else
     printf "\tLadok environment is %s\n" "${ladok_environment}"
 fi
 
