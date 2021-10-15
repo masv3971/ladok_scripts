@@ -73,6 +73,9 @@ fi
 
 if ! choose_ladok_environment "${certificate_name}" "${password_input}"; then
     printf "\tERROR no ladok environment was found\n"
+    if openssl x509 -in "${certificate_name}".crt -passin pass:"${password_input}" -subject -noout | grep Prod-UFH; then
+        printf "\tUppföljningsdatabasen cert, no REST available, use STUNNEL.\n"
+    fi
     exit 1
 else 
     printf "\tLadok environment is %s\n" "${ladok_environment}"
