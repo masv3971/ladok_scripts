@@ -15,7 +15,7 @@ get_client_cert(){
 }
 
 get_server_cert() {
-    openssl pkcs12 -in "${1}" -passin pass:"${2}" -password pass:"${2}" -passout pass:"${2}" -out Ladok3.Chain.CA.pem -cacerts -nodes -nokeys
+    openssl pkcs12 -in "${1}" -passin pass:"${2}" -password pass:"${2}" -passout pass:"${2}" -out "${3}".pem -cacerts -nodes -nokeys
 }
 
 
@@ -44,6 +44,11 @@ if [[ "${certificate_file}" =~ (p12$|pfx$) ]]; then
 
     if ! get_cert_key "${certificate_file}" "${password_input}" "${certificate_name}"; then
         printf "\tERROR can not generate key, exiting...\n"
+        exit 1
+    fi
+
+    if ! get_server_cert "${certificate_file}" "${password_input}" "${certificate_name}"; then
+        printf "\tERROR can not convert bundle to server cert, exiting...\n"
         exit 1
     fi
 
