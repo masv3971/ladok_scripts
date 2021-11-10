@@ -18,6 +18,10 @@ get_server_cert() {
     openssl pkcs12 -in "${1}" -passin pass:"${2}" -password pass:"${2}" -passout pass:"${2}" -out "${3}".pem -cacerts -nodes -nokeys
 }
 
+decrypt_cert_key(){
+    openssl rsa -in "${1}".key -out "${1}".key -passin pass:"${2}" -passout pass:"${2}"
+}
+
 
 if [[ -z "${certificate_file}" ]]; then
     print_usage
@@ -49,6 +53,11 @@ if [[ "${certificate_file}" =~ (p12$|pfx$) ]]; then
 
     if ! get_server_cert "${certificate_file}" "${password_input}" "${certificate_name}"; then
         printf "\tERROR can not convert bundle to server cert, exiting...\n"
+        exit 1
+    fi
+
+    if ! decrypt_cert_key "${certificate_name}" "${password_input}"; then
+        printf "\tERROR can not decrypt privatekey, exiting...\n"
         exit 1
     fi
 
