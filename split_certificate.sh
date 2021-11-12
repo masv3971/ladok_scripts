@@ -22,6 +22,15 @@ decrypt_cert_key(){
     openssl rsa -in "${1}".key -out "${1}".key -passin pass:"${2}" -passout pass:"${2}"
 }
 
+cert_PEM_to_DER(){
+    openssl x509 -inform PEM -in "${1}"."${2}" -outform DER -out "${1}"."${2}"
+}
+
+key_PEM_to_DER(){
+    openssl rsa -inform PEM -in "${1}".key -outform DER -out "${1}".key
+}
+
+
 
 if [[ -z "${certificate_file}" ]]; then
     print_usage
@@ -45,9 +54,8 @@ if [[ "${certificate_file}" =~ (p12$|pfx$) ]]; then
         printf "\tERROR can not convert cert bundle to client cert, exiting...\n"
         exit 1
     fi
-
-    if ! get_cert_key "${certificate_file}" "${password_input}" "${certificate_name}"; then
-        printf "\tERROR can not generate key, exiting...\n"
+    if ! cert_PEM_to_DER "${certificate_name}" crt; then
+        printf "\tERROR can not convert client cert from PEM to DER format\n"
         exit 1
     fi
 
@@ -56,8 +64,23 @@ if [[ "${certificate_file}" =~ (p12$|pfx$) ]]; then
         exit 1
     fi
 
+    if ! cert_PEM_to_DER "${certificate_name}" pem; then
+        printf "\tERROR can not convert chain cert from PEM to DER format\n"
+        exit 1
+    fi
+
+    if ! get_cert_key "${certificate_file}" "${password_input}" "${certificate_name}"; then
+        printf "\tERROR can not generate key, exiting...\n"
+        exit 1
+    fi
+
     if ! decrypt_cert_key "${certificate_name}" "${password_input}"; then
         printf "\tERROR can not decrypt privatekey, exiting...\n"
+        exit 1
+    fi
+
+    if ! key_PEM_to_DER "${certificate_name}"; then
+        printf "\tERROR can not convert key from PEM to DER format \n"
         exit 1
     fi
 
