@@ -54,20 +54,20 @@ if [[ "${certificate_file}" =~ (p12$|pfx$) ]]; then
         printf "\tERROR can not convert cert bundle to client cert, exiting...\n"
         exit 1
     fi
-    if ! cert_PEM_to_DER "${certificate_name}" crt; then
-        printf "\tERROR can not convert client cert from PEM to DER format\n"
-        exit 1
-    fi
+    #if ! cert_PEM_to_DER "${certificate_name}" crt; then
+    #    printf "\tERROR can not convert client cert from PEM to DER format\n"
+    #    exit 1
+    #fi
 
     if ! get_server_cert "${certificate_file}" "${password_input}" "${certificate_name}"; then
         printf "\tERROR can not convert bundle to server cert, exiting...\n"
         exit 1
     fi
 
-    if ! cert_PEM_to_DER "${certificate_name}" pem; then
-        printf "\tERROR can not convert chain cert from PEM to DER format\n"
-        exit 1
-    fi
+    #if ! cert_PEM_to_DER "${certificate_name}" pem; then
+    #    printf "\tERROR can not convert chain cert from PEM to DER format\n"
+    #    exit 1
+    #fi
 
     if ! get_cert_key "${certificate_file}" "${password_input}" "${certificate_name}"; then
         printf "\tERROR can not generate key, exiting...\n"
@@ -79,10 +79,10 @@ if [[ "${certificate_file}" =~ (p12$|pfx$) ]]; then
         exit 1
     fi
 
-    if ! key_PEM_to_DER "${certificate_name}"; then
-        printf "\tERROR can not convert key from PEM to DER format \n"
-        exit 1
-    fi
+    #if ! key_PEM_to_DER "${certificate_name}"; then
+    #    printf "\tERROR can not convert key from PEM to DER format \n"
+    #    exit 1
+    #fi
 
     printf "\tclient-cert and key has been successfully created.\n"
 fi
